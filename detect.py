@@ -35,7 +35,7 @@ import torch
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
-x = []
+x =""
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
@@ -156,13 +156,16 @@ def run(
 
                 # Print results
                 global x
+
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
 
                     s = f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                     #print(s)
-
-                    x.append(s)
+                    with open("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt", mode='a') as agenda:
+                        global x
+                        agenda.write(x)
+                    x = s
                     #print("Pieza",names[int(c),"Cantidad:",n])
                     #print(s)
                 #print("siguiente")
@@ -264,7 +267,9 @@ def parse_opt():
 def main(opt):
     check_requirements(exclude=('tensorboard', 'thop'))
     run(**vars(opt))
-    print(x)
+    #print(x)
+
+
 
 
 if __name__ == "__main__":
