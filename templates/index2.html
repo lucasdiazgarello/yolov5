@@ -1,0 +1,65 @@
+<!doctype html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+
+
+
+
+<script>
+        $(document).ready(function() {
+           $('#retrieve').click(function(){
+               $.ajax({
+               url: "{{ url_for ('get_img') }}",
+               type: "GET",
+               success: function(response) {
+                   $("#myimg").attr('src', '/static/' + response);
+              },
+              error: function(xhr) {
+                //Do Something to handle error
+             }
+             });
+           });
+        });
+       </script>
+
+
+
+
+
+
+
+
+
+<head><title>Test</title>
+    <meta charset=utf-8> </head>
+    <body  style="background-color:grey;">
+        <h1>Legos Detecter</h1>
+
+        <form action="/uploader"  enctype="multipart/form-data" method="post">
+            <input type="file" name="file">
+            <input type="submit" value="Cargar" />
+        </form>
+
+        <form action="/my-link/">
+            <input type="submit" value="nada" />
+
+        </form>
+
+
+
+        <p>Objetos Detectados:{{ sample }}</p>
+        <!-- <img src="{{url_for('static', filename='test.jpg')}}"  align="top" width="400" height="500"/> -->
+
+
+        <h2>Deteccion</h2>
+            <button type='button' id ='retrieve'>Detectar</button>
+             <img src="" id="myimg"  width="400" height=auto/>
+
+
+
+
+
+
+    </body>

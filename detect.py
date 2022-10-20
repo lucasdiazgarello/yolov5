@@ -143,7 +143,8 @@ def run(
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
             p = Path(p)  # to Path
-            save_path = str(save_dir / p.name)  # im.jpg
+            #save_path = str(save_dir / p.name)  # im.jpg
+            save_path = 'static/resultado.jpg'
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
             #s += '%gx%g ' % im.shape[2:]  # print string
 
@@ -156,12 +157,15 @@ def run(
 
                 # Print results
                 global x
+                if(os.path.isfile("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt")):
+                    os.remove("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt")
 
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
 
                     s = f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                     #print(s)
+
                     with open("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt", mode='a') as agenda:
                         global x
                         agenda.write(x)
@@ -176,8 +180,10 @@ def run(
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
-                        with open(f'{txt_path}.txt', 'a') as f:
+
+                        with open(f'{txt_path}.txt', 'w') as f:
                             f.write(('%g ' * len(line)).rstrip() % line + '\n')
+
 
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
