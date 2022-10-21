@@ -35,7 +35,7 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
+<div class="container">
     <div class="row">
       <div class="one-half column" style="margin-top: 25%">
         <h1>Detector de legos</h1>
@@ -50,46 +50,26 @@
 </div>
 
 
-
-        <h3>Subir imagen a detectar</h3>
-        <form action="/uploader"  enctype="multipart/form-data" method="post">
-            <input type="file" name="file">
-            <input type="submit" value="Cargar" />
+        <h3>Subir Creacion</h3>
+        <form action="/subircreacion"  enctype="multipart/form-data" method="post">
+            <input type="file" name="file" input>
+            <br>
+            <p>Ingrese el nombre del creador</p>
+            <input type="text" name="Nombre"
+               placeholder="Nombre del creador"></input>
+            <p>Ingrese el titulo de la creacion</p>
+            <input type="text" name="Titulo" placeholder="Titulo">
+           <p>Ingrese una descripcion de su creacion</p>
+              <textarea id="descripcion" name="Descripcion" placeholder="descripcion" rows="4" cols="50"></textarea>
+              <br>
+              <input type="submit" value="Subir">
         </form>
 
-        <form action="/my-link">
-            <input type="submit" value="Procesar" />
-        </form>
-
-
-
-       <!-- <p>Objetos Detectados:{{ sample }}</p> -->
-        <!-- <img src="{{url_for('static', filename='test.jpg')}}"  align="top" width="400" height="500"/> -->
-
-
-        <h3>Resultado</h3>
-            <button type='button' id ='retrieve'>Ver resultado</button>
-             <img src="" id="myimg"  width="400" height=auto/>
-
-    <p>Piezas detectadas:</p>
-
-  <ul class="nav">
-<li><img src="static/images/blancog.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ blancog }}</p></li>
-<li><img src="static/images/blanco c.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ blancoc }}</p></li>
-<li><img src="static/images/amarillo g.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ amarillog }}</p></li>
-<li><img src="static/images/amarillo c.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ amarilloc }}</p></li>
-<li><img src="static/images/azul g.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ azulg }}</p></li>
-<li><img src="static/images/azul c.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ azulc }}</p></li>
-<li><img src="static/images/rojo g.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ rojog }}</p></li>
-<li><img src="static/images/rojo c.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ rojoc }}</p></li>
-<li><img src="static/images/negro g.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ negrog }}</p></li>
-<li><img src="static/images/negro c.jpg" alt="W3Schools.com" width="120" height="120"><p>{{ negroc }}</p></li>
-
-</ul>
-
-
-
-
+  <form action="/mostrar" >
+      <input type="submit" name="mostrar">
+{% for pic in pics %}
+    <img src='static/images/Felipe/{{pic}}' width="400" height=auto/>
+{% endfor %} </form>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

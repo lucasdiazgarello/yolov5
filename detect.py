@@ -157,8 +157,8 @@ def run(
 
                 # Print results
                 global x
-                if(os.path.isfile("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt")):
-                    os.remove("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt")
+                if(os.path.isfile("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.csv")):
+                    os.remove("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.csv")
 
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
@@ -166,7 +166,7 @@ def run(
                     s = f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                     #print(s)
 
-                    with open("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.txt", mode='a') as agenda:
+                    with open("/home/ldiaz/Desktop/Custom/Mio/yolov5/datos.csv", mode='a') as agenda:
                         global x
                         agenda.write(x)
                     x = s
