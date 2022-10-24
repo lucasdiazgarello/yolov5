@@ -5,6 +5,7 @@ from flask import Flask, render_template, url_for, request, flash, redirect
 import subprocess
 import sys
 
+from requests import session
 from werkzeug.utils import secure_filename
 
 import Legos
@@ -36,6 +37,7 @@ def index():
 @app.route('/subir')
 def subir():
     return render_template('subir.html')
+
 
 
 @app.route('/my-link')
@@ -111,14 +113,28 @@ def subircreacion():
     return render_template('subir.html')
 
 
-@app.route('/mostrar')
+@app.route('/listar', methods=['GET', 'POST'])
 def mostrarimagenes():
-    pics = os.listdir('static/images/Felipe/')
-    picstmp = pics.copy()
-    for n in range(len(picstmp)):
-        if ".txt" in picstmp[n]:
-            pics.pop(n)
-    return render_template("subir.html", pics=pics)
+    if request.method == 'POST':
+        carpeta = request.form.get('seleccion')
+        print(carpeta)
+        direccion = 'static/images/' +carpeta +'/'
+        pics = os.listdir(direccion)
+        picstmp = pics.copy()
+        for n in range(len(picstmp)):
+            if ".txt" in picstmp[n]:
+                pics.pop(n)
+        return render_template("coleccion.html",seleccion=carpeta, pics=pics)
+
+@app.route('/colecciones')
+def listar():
+    archivos = os.listdir('static/images/')
+    carpetas = []
+    for n in range(len(archivos)):
+        if not ".jpg" in archivos[n]:
+            carpetas.append(archivos[n])
+    return render_template('colecciones.html',opciones=carpetas)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
