@@ -50,36 +50,13 @@
   <a href="/colecciones">Colecciones</a>
 </div>
 
-<div>
-        <h3>Subir Creacion</h3>
-        <h4>Bloques cargados = {{hay}}</h4>
-        <form action="/subircreacion"  enctype="multipart/form-data" method="post">
-            <input type="file" name="file" input>
-            <br>
-            <p>Ingrese el nombre del creador</p>
-            <input type="text" name="Nombre"
-               placeholder="Nombre del creador"></input>
-            <p>Ingrese el titulo de la creacion</p>
-            <input type="text" name="Titulo" placeholder="Titulo">
-           <p>Ingrese una descripcion de su creacion</p>
-              <textarea id="descripcion" name="Descripcion" placeholder="descripcion" rows="4" cols="50"></textarea>
-              <br>
-              <input type="submit" value="Subir">
-        </form>
-
-</div>
-
-  <div>
-      <h3>Buscar creaciones para mis Rastis</h3>
-      <form action="/buscar">
-      <input type="submit" value="Buscar" />
-      </form>
 
 
-
-  </div>
-
-
+{% for i in resu%}
+  <p>{{i.titulo}}</p>
+    <img src='{{i.direccionfoto}}' width="400" height=auto/>
+  <p>{{i.direcciondesc}}</p>
+{% endfor %}
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
