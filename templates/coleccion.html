@@ -52,8 +52,11 @@
 
 
 
-{% for pic in pics %}
-    <img src='{{direccion}}/{{pic}}' width="400" height=auto/>
+{% for resu in resultados %}
+    <ul class="nav">
+        <h3>{{resu.titulo}}</h3>
+    <img src='{{resu.direccionfoto}}' width="400" height=auto/><p>{{resu.direcciondesc}}</p>
+    </ul>
 {% endfor %}
 
 <!-- End Document

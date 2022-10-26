@@ -15,7 +15,7 @@ IMAGE_UPLOAD = 'data/images'
 UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 blocks = []
-BloquesCargados = False
+BloquesCargados = "Bloques no procesados"
 FotoCargada = False
 class Resultado:
 
@@ -45,7 +45,7 @@ def index():
 
 @app.route('/subir')
 def subir():
-    return render_template('subir.html', hay=BloquesCargados)
+    return render_template('subir.html', hay=BloquesCargados,foto=UPLOAD_FOLDER+'/' + BloquesCargados +'.png')
 
 
 @app.route('/my-link')
@@ -59,7 +59,7 @@ def my_link():
     get_img()
     piezas = Legos.contar("datos.csv")
     blocks = piezas.copy()
-    BloquesCargados = True
+    BloquesCargados = "Bloques procesados"
     # print(piezas)
     with open("datos.txt", "r") as f:
         content = f.read()
@@ -133,21 +133,27 @@ def subircreacion():
                 return redirect(url_for('upload_file', name="filename"))
         else:
             flash("Bloques no cargados", 'error')
-    return render_template('subir.html')
+    return render_template('subir.html', hay=BloquesCargados,foto=UPLOAD_FOLDER+BloquesCargados +'.png')
 
 
 @app.route('/listar', methods=['GET', 'POST'])
 def mostrarimagenes():
     if request.method == 'POST':
+        resultados = [Resultado]
         carpeta = request.form.get('seleccion')
         print(carpeta)
         direccion = 'static/images/' + carpeta + '/'
-        pics = os.listdir(direccion)
-        picstmp = pics.copy()
-        for n in range(len(picstmp)):
-            if ".txt" in picstmp[n]:
-                pics.pop(n)
-        return render_template("coleccion.html", direccion=direccion, pics=pics)
+        datos = os.listdir(direccion)
+        for n in range(len(datos)):
+            dire = direccion + datos[n]
+            if ".txt" in datos[n]:
+                with open(dire,mode='r')as f:
+                    desc = f.read()
+                foto = dire.replace('txt','jpg')
+                titulo = datos[n].replace('.txt','')
+            resu=Resultado(titulo,foto,desc)
+            resultados.append(resu)
+        return render_template("coleccion.html", resultados=resultados)
 
 
 @app.route('/colecciones')
@@ -155,19 +161,17 @@ def listar():
     archivos = os.listdir('static/images/')
     carpetas = []
     for n in range(len(archivos)):
-        if not ".jpg" in archivos[n]:
+        if not ".jpg" in archivos[n] and not ".png" in archivos[n]:
             carpetas.append(archivos[n])
 
     return render_template('colecciones.html', opciones=carpetas)
+
 
 
 @app.route('/buscar')
 def buscar():
     archivos = os.listdir('static/images/')
     carpetas = []
-    creaciones = []
-    descripciones = []
-    titulos = []
     resultados = [Resultado]
     for n in range(len(archivos)):
         if not ".jpg" in archivos[n]:

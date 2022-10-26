@@ -33,6 +33,7 @@
 </head>
 <body>
 
+
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <div class="container">
@@ -52,7 +53,23 @@
 
 <div>
         <h3>Subir Creacion</h3>
-        <h4>Bloques cargados = {{hay}}</h4>
+
+
+
+
+<div id="container" style="white-space:nowrap">
+
+    <div id="image" style="display:inline;">
+        <img src="{{foto}}"  width="10" height=auto/>
+    </div>
+
+    <div id="texts" style="display:inline; white-space:nowrap;">
+        {{hay}}
+    </div>
+
+</div>
+
+
         <form action="/subircreacion"  enctype="multipart/form-data" method="post">
             <input type="file" name="file" input>
             <br>

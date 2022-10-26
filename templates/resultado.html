@@ -51,19 +51,14 @@
 </div>
 
 
-
 {% for i in resu%}
-  <p>{{i.titulo}}</p>
-    <img src='{{i.direccionfoto}}' width="400" height=auto/>
-  <p>{{i.direcciondesc}}</p>
-{% endfor %}
-
+  <h3>{{i.titulo}}</h3>
+    <img src='{{i.direccionfoto}}' width="400" height=auto/><p>{{i.direcciondesc}}</p>
+  {% endfor %}
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
 </html>
-
-
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
