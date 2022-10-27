@@ -35,7 +35,7 @@ def contar(direccion):
     negroc = ""
     results = ["0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS",
                "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS"]
-    with open("datos.csv", "r") as f:
+    with open("static/"+direccion, "r") as f:
         for row in csv.reader(f):
             for i in range(len(row)):
 

@@ -29,7 +29,7 @@ class Resultado:
 
 def func1():
     print('func1: starting')
-    Legos.detectar(session['name'], 'static/' + session['name'] + '.jpg')
+    Legos.detectar(session['name'], IMAGE_UPLOAD+"/"+ session['name'] + '.jpg')
 
 
 def allowed_file(filename):
@@ -103,7 +103,8 @@ def my_link():
     p1.start()
     p1.join()
     get_img()
-    piezas = Legos.contar("datos.csv")
+    piezas = Legos.contar(session['name']+".csv")
+    session['piezas']=[piezas]
     blocks = piezas.copy()
     BloquesCargados = "Bloques procesados"
     # print(piezas)
@@ -150,7 +151,8 @@ def subircreacion():
             titulo = aux + ".txt"
             titulo1 = aux + ".jpg"
             titulocsv = aux + ".csv"
-            nombre = request.form['Nombre']
+            #nombre = request.form['Nombre']
+            nombre = session['name']
             desc = request.form['Descripcion']
             print(blocks)
             # check if the post request has the file part
@@ -171,8 +173,8 @@ def subircreacion():
                 file.save(os.path.join(dire, titulo1))
                 with open(dire + "/" + titulo, mode='w') as texto:
                     texto.write(desc)
-
-                elementos = ''.join(blocks)
+                bloques = str(session['piezas'])
+                elementos = ''.join(bloques)
                 with open(dire + "/" + titulocsv, mode='w') as bloques:
                     bloques.write(elementos)
 
