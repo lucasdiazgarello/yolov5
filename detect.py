@@ -78,6 +78,7 @@ def run(
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
         vid_stride=1,  # video frame-rate stride
+        user='test'
 ):
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
@@ -144,7 +145,7 @@ def run(
 
             p = Path(p)  # to Path
             #save_path = str(save_dir / p.name)  # im.jpg
-            save_path = 'static/resultado.jpg'
+            save_path = 'static/'+ user +'resultado.jpg'
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
             #s += '%gx%g ' % im.shape[2:]  # print string
 
@@ -264,6 +265,7 @@ def parse_opt():
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
     parser.add_argument('--vid-stride', type=int, default=1, help='video frame-rate stride')
+    parser.add_argument('--user', type=str)
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     #print_args(vars(opt))

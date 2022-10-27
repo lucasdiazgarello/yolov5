@@ -1,22 +1,24 @@
 import os
 import time
 
-from flask import Flask, render_template, url_for, request, flash, redirect
+from flask import Flask, render_template, url_for, request, flash, redirect, session
 import subprocess
 import sys
 
-from requests import session
+from flask_session import Session
 from werkzeug.utils import secure_filename
 
 import Legos
 from multiprocessing import Process
 
-IMAGE_UPLOAD = 'data/images'
+IMAGE_UPLOAD = 'static'
 UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 blocks = []
 BloquesCargados = "Bloques no procesados"
 FotoCargada = False
+
+
 class Resultado:
 
     def __init__(self, titulo, direccionfoto, direcciondesc):
@@ -24,9 +26,10 @@ class Resultado:
         self.direccionfoto = direccionfoto
         self.direcciondesc = direcciondesc
 
+
 def func1():
     print('func1: starting')
-    Legos.detectar()
+    Legos.detectar(session['name'], 'static/' + session['name'] + '.jpg')
 
 
 def allowed_file(filename):
@@ -36,16 +39,59 @@ def allowed_file(filename):
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 
-@app.route('/')
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    # if form is submited
+    if request.method == "POST":
+        # record the user name
+        session["name"] = request.form.get("name")
+        if os.path.exists(IMAGE_UPLOAD + '/' + session['name'] + 'resultado.jpg'):
+            global BloquesCargados
+            BloquesCargados = "Bloques procesados"
+        # redirect to the main page
+        return redirect("/")
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+
+    global BloquesCargados
+    BloquesCargados = "Bloques no procesados"
+    if os.path.exists(IMAGE_UPLOAD + '/' + session['name'] + 'resultado.jpg'):
+        os.remove(IMAGE_UPLOAD + '/' + session['name'] + 'resultado.jpg')
+    if os.path.exists(IMAGE_UPLOAD + '/' + session['name'] + '.jpg'):
+        os.remove(IMAGE_UPLOAD + '/' + session['name'] + '.jpg')
+    session["name"] = None
+    return redirect("/login")
+
+
+@app.route("/")
 def index():
+    # check if the users exist or not
+    if not session.get("name"):
+        # if not there in the session then redirect to the login page
+        return redirect("/login")
+
+    if os.path.exists(IMAGE_UPLOAD + '/' + session['name'] + 'resultado.jpg'):
+        global BloquesCargados
+        BloquesCargados = "Bloques procesados"
     return render_template('index.html')
+
+
+# @app.route('/')
+# def index():
+#   return render_template('index.html')
 
 
 @app.route('/subir')
 def subir():
-    return render_template('subir.html', hay=BloquesCargados,foto=UPLOAD_FOLDER+'/' + BloquesCargados +'.png')
+    return render_template('subir.html', hay=BloquesCargados, foto=UPLOAD_FOLDER + '/' + BloquesCargados + '.png')
 
 
 @app.route('/my-link')
@@ -72,7 +118,7 @@ def my_link():
 
 @app.route("/getimage")
 def get_img():
-    return "resultado.jpg"
+    return session["name"]+"resultado.jpg"
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
@@ -90,7 +136,7 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(IMAGE_UPLOAD, "Legos.jpg"))
+            file.save(os.path.join(IMAGE_UPLOAD, session['name'] + ".jpg"))
             return redirect(url_for('upload_file', name="filename"))
     return render_template('index.html')
 
@@ -133,7 +179,7 @@ def subircreacion():
                 return redirect(url_for('upload_file', name="filename"))
         else:
             flash("Bloques no cargados", 'error')
-    return render_template('subir.html', hay=BloquesCargados,foto=UPLOAD_FOLDER+BloquesCargados +'.png')
+    return render_template('subir.html', hay=BloquesCargados, foto=UPLOAD_FOLDER + BloquesCargados + '.png')
 
 
 @app.route('/listar', methods=['GET', 'POST'])
@@ -147,11 +193,11 @@ def mostrarimagenes():
         for n in range(len(datos)):
             dire = direccion + datos[n]
             if ".txt" in datos[n]:
-                with open(dire,mode='r')as f:
+                with open(dire, mode='r') as f:
                     desc = f.read()
-                foto = dire.replace('txt','jpg')
-                titulo = datos[n].replace('.txt','')
-            resu=Resultado(titulo,foto,desc)
+                foto = dire.replace('txt', 'jpg')
+                titulo = datos[n].replace('.txt', '')
+            resu = Resultado(titulo, foto, desc)
             resultados.append(resu)
         return render_template("coleccion.html", resultados=resultados)
 
@@ -165,7 +211,6 @@ def listar():
             carpetas.append(archivos[n])
 
     return render_template('colecciones.html', opciones=carpetas)
-
 
 
 @app.route('/buscar')
@@ -183,13 +228,14 @@ def buscar():
             if '.csv' in aux[i]:
                 direccion = UPLOAD_FOLDER + '/' + carpetas[n] + '/' + aux[i]
 
-                if Legos.comparar(direccion,blocks):
-                    with open(direccion.replace('.csv','.txt'), mode='r') as f:
-                        desc=f.read()
-                    resu = Resultado(aux[i].replace('.csv',''),direccion.replace('.csv','.jpg'),desc)
+                if Legos.comparar(direccion, blocks):
+                    with open(direccion.replace('.csv', '.txt'), mode='r') as f:
+                        desc = f.read()
+                    resu = Resultado(aux[i].replace('.csv', ''), direccion.replace('.csv', '.jpg'), desc)
                     resultados.append(resu)
     return render_template('resultado.html', resu=resultados)
 
 
 if __name__ == '__main__':
+    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
     app.run(debug=True, host='0.0.0.0')

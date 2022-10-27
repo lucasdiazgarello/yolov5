@@ -7,8 +7,8 @@ import re
 import detect as det
 
 
-def detectar():
-    det.run()
+def detectar(user,dire):
+    det.run(user=user,source=dire)
 
 
 def comparar(direccion, bloquesactuales):

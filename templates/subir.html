@@ -97,6 +97,15 @@
   </div>
 
 
+ {% block y %}
+
+   {% if session.name %}
+      Estar registrado como {{ session.name }} guachin <a href="/logout">logout</a>.
+   {% else %}
+      No estas Registrado. <a href="/login">login</a>.
+   {% endif %}
+
+{% endblock %}
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

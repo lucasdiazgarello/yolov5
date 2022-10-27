@@ -52,6 +52,9 @@
 
 
 
+
+
+
         <h3>Subir imagen a detectar</h3>
         <form action="/uploader"  enctype="multipart/form-data" method="post">
             <input type="file" name="file">
@@ -89,7 +92,15 @@
 </ul>
 
 
+{% block y %}
 
+   {% if session.name %}
+      Estar registrado como {{ session.name }} guachin <a href="/logout">logout</a>.
+   {% else %}
+      No estas Registrado. <a href="/login">login</a>.
+   {% endif %}
+
+{% endblock %}
 
 
 
