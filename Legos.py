@@ -13,8 +13,14 @@ def detectar(user,dire):
 
 def comparar(direccion, bloquesactuales):
     compatible = True
+
+    #print(direccion)
     bloques = contar(direccion)
+    print(bloques)
+    print(bloquesactuales)
     for n in range(len(bloquesactuales)):
+        #print("bloques actuales"+bloquesactuales[n])
+        #print("bloques " + bloques[n])
         if cantidad(bloquesactuales[n]) < cantidad(bloques[n]):
             compatible = False
 
@@ -23,64 +29,58 @@ def comparar(direccion, bloquesactuales):
 
 # print(det.x)
 def contar(direccion):
-    blancog = ""
-    blancoc = ""
-    amarillog = ""
-    amarilloc = ""
-    azulg = ""
-    azulc = ""
-    rojog = ""
-    rojoc = ""
-    negrog = ""
-    negroc = ""
-    results = ["0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS",
-               "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS", "0 DETECTADOS"]
-    with open("static/"+direccion, "r") as f:
+    results = ["0 detectadas","0 detectadas","0 detectadas","0 detectadas","0 detectadas","0 detectadas","0 detectadas","0 detectadas","0 detectadas","0 detectadas"]
+    if"static/static/" in direccion:
+        direccion.replace('static/static/','static/')
+    print(direccion)
+    with open(direccion, "r") as f:
         for row in csv.reader(f):
             for i in range(len(row)):
+                print(row[i])
 
                 if "T1 BLACK" in row[i]:
-                    results.pop(0)
-                    results.insert(0, row[i])
+                     results[0]=row[i]
                 if "T2 BLACK" in row[i]:
-                    results.pop(1)
-                    results.insert(1, row[i])
+                     results[1] = row[i]
                 if "T1 WHITE" in row[i]:
-                    results.pop(2)
-                    results.insert(2, row[i])
+                     results[2] = row[i]
                 if "T2 WHITE" in row[i]:
-                    results.pop(3)
-                    results.insert(3, row[i])
+                     results[3] = row[i]
                 if "T1 RED" in row[i]:
-                    results.pop(4)
-                    results.insert(4, row[i])
+                     results[4] = row[i]
                 if "T2 RED" in row[i]:
-                    results.pop(5)
-                    results.insert(5, row[i])
+                     results[5] = row[i]
                 if "T1 BLUE" in row[i]:
-                    results.pop(6)
-                    results.insert(6, row[i])
+                     results[6] = row[i]
                 if "T2 BLUE" in row[i]:
-                    results.pop(7)
-                    results.insert(7, row[i])
+                     results[7] = row[i]
                 if "T1 YELLOW" in row[i]:
-                    results.pop(8)
-                    results.insert(8, row[i])
+                     results[8] = row[i]
                 if "T2 YELLOW" in row[i]:
-                    results.pop(9)
-                    results.insert(9, row[i])
+                     results[9] = row[i]
     return results
-    # print(results)
+
 
 
 def cantidad(string):
-    cantidad = int(re.match("^ *[0-9]+", string).group())
+    # if re.match("[0-9]", string[0]):
+    #      print("entre al sano")
+    #      cantidad = int(re.match("^ *[0-9]+", string).group())
+    # else:
+    #     string.replace("[","")
+    #     cantidad = int(re.match("^ *[0-9]+", string).group())
+    string2=string.replace("[","")
+    print(string)
+    print(string2)
+    string3=string2.replace("'","")
+    print(string3)
+    cantidad = int(re.match("^ *[0-9]+", string3).group())
     return cantidad
 
 
-# ja=contar()
+ #ja=contar()
 
-print(cantidad(" 17 T1 Black"))
+#print(cantidad(" 17 T1 Black"))
 # black white red blue yellow
 
 # proc = subprocess.Popen(['/home/ldiaz/Desktop/Custom/Mio/yolov5/detect.py','detect',  ''], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)#

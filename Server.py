@@ -103,8 +103,8 @@ def my_link():
     p1.start()
     p1.join()
     get_img()
-    piezas = Legos.contar(session['name']+".csv")
-    session['piezas']=[piezas]
+    piezas = Legos.contar("static/"+session['name']+".csv")
+    session['piezas']=piezas
     blocks = piezas.copy()
     BloquesCargados = "Bloques procesados"
     # print(piezas)
@@ -151,10 +151,15 @@ def subircreacion():
             titulo = aux + ".txt"
             titulo1 = aux + ".jpg"
             titulocsv = aux + ".csv"
+            print("ARRANCA ACA")
+
+            print("titulo"+aux)
             #nombre = request.form['Nombre']
             nombre = session['name']
             desc = request.form['Descripcion']
-            print(blocks)
+            #print("nombre"+nombre)
+            #print("descripcion"+desc)
+            #print(blocks)
             # check if the post request has the file part
             if 'file' not in request.files:
                 flash('No file part')
@@ -174,7 +179,12 @@ def subircreacion():
                 with open(dire + "/" + titulo, mode='w') as texto:
                     texto.write(desc)
                 bloques = str(session['piezas'])
+                print("LOS BLOQUES")
+                print(bloques)
                 elementos = ''.join(bloques)
+                print("los elementos")
+                print(elementos)
+                print(dire + "/" + titulocsv)
                 with open(dire + "/" + titulocsv, mode='w') as bloques:
                     bloques.write(elementos)
 
@@ -199,8 +209,8 @@ def mostrarimagenes():
                     desc = f.read()
                 foto = dire.replace('txt', 'jpg')
                 titulo = datos[n].replace('.txt', '')
-            resu = Resultado(titulo, foto, desc)
-            resultados.append(resu)
+                resu = Resultado(titulo, foto, desc)
+                resultados.append(resu)
         return render_template("coleccion.html", resultados=resultados)
 
 
@@ -221,7 +231,7 @@ def buscar():
     carpetas = []
     resultados = [Resultado]
     for n in range(len(archivos)):
-        if not ".jpg" in archivos[n]:
+        if not ".jpg" in archivos[n] and not ".png" in archivos[n]:
             carpetas.append(archivos[n])
 
     for n in range(len(carpetas)):
@@ -229,7 +239,6 @@ def buscar():
         for i in range(len(aux)):
             if '.csv' in aux[i]:
                 direccion = UPLOAD_FOLDER + '/' + carpetas[n] + '/' + aux[i]
-
                 if Legos.comparar(direccion, blocks):
                     with open(direccion.replace('.csv', '.txt'), mode='r') as f:
                         desc = f.read()
